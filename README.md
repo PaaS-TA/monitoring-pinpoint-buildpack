@@ -25,11 +25,11 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 
 ```
 ...
-Creating build/java-buildpack-offline-6800578.zip
+Creating build/java-buildpack-offline-d0101b8.zip
 ```  
 
 다음 경로에 패키징 파일이 생성된다.
-`build/java-buildpack-offline-6800578.zip`
+`build/java-buildpack-offline-d0101b8.zip`
 
 
 #### 3. 빌드팩 업로드
@@ -47,7 +47,7 @@ Creating build/java-buildpack-offline-6800578.zip
 <div id='notice-01'></div>
 ※ 기본적으로 빌드팩은 검출 기준을 가지고 있다. 이를 통해 애플리케이션 배포시, 사용자가 빌드팩을 지정해주지 않아도 해당 소스에 맞는 빌드팩을 자동으로 찾아준다. 이떄, 같은 검출 기준을 가진 빌드팩이 여러개 있을 경우에는 우선순위에 따라 가장 우선순위가 높은 빌드팩을 사용하게 된다. 전자정부 프레임워크 빌드팩은 Java 빌드팩과 동일한 검출 기준을 갖고 있기 때문에 전자정부 프레임워크 빌드팩의 우선순위가 Java 빌드팩보다 높을 경우, 빌드팩을 지정하지 않고 배포하는 일반 Java 애플리케이션이 전자정부 프레임워크 빌드팩을 사용하게 된다. 이러한 혼란을 방지하기 위해 전자정부 프레임워크 빌드팩은 Java 빌드팩보다 우선 순위를 낮게 지정한다. (번호가 낮을 수록 우선순위가 높기 때문에 Java 빌드팩보다 높은 번호로 지정한다.)
 
-`cf create-buildpack java_buildpack_pinpoint build/java-buildpack-offline-6800578.zip 12`  
+`cf create-buildpack java_buildpack_pinpoint build/java-buildpack-offline-d0101b8.zip 12`  
 
 ```
 Creating buildpack java_buildpack_pinpoint...
@@ -75,5 +75,5 @@ php_buildpack            8          true      false    php_buildpack-cached-v4.3
 binary_buildpack         9          true      false    binary_buildpack-cached-v1.0.5.zip
 dotnet_core_buildpack    10         true      false    dotnet-core_buildpack-cached-v1.0.4.zip
 pinpoint_buildpack       11         true      false    java-buildpack-offline-pinpoint-v2.zip
-java_buildpack_pinpoint   12         true      false    java-buildpack-offline-6800578.zip
+java_buildpack_pinpoint   12         true      false    java-buildpack-offline-d0101b8.zip
 ```

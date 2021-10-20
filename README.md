@@ -23,7 +23,7 @@
   </tr>
   <tr align=center>
     <td><a href="https://github.com/PaaS-TA/PAAS-TA-PINPOINT-MONITORING-RELEASE">Pinpoint</td>
-    <td>🚩 <a href="https://github.com/PaaS-TA/PAAS-TA-PINPOINT-MONITORING-BUILDPACK">Pinpoint Buildpack</td>
+    <td>🚩 <a href="https://github.com/PaaS-TA/monitoring-pinpoint-buildpack">Pinpoint Buildpack</td>
     <td></td>
     <td></td>
   </tr>
@@ -63,7 +63,7 @@
 </table>
 <i>🚩 You are here.</i>
 
-# PAAS-TA-PINPOINT-MONITORING-BUILDPACK
+# PaaS-TA monitoring-pinpoint-buildpack
 
 ### PaaS-TA에 PinPoint 빌드팩 등록
 PaaS-TA에서 PinPoint 빌드팩을 등록하기 위해서는 빌드팩 소스 Clone, 빌드팩 패키지, 업로드의 3가지 절차가 필요하다. 하단에 순서대로 설명을 기재한다.
@@ -72,7 +72,7 @@ PaaS-TA에서 PinPoint 빌드팩을 등록하기 위해서는 빌드팩 소스 C
 #### 1. 빌드팩 소스 clone
 git 명령어를 이용하여 소스를 clone 한다. git 명령어를 사용하기 위해서는 git의 설치가 요구된디. 사용자의 환경에 맞게 git을 설치한다.
 
-`git clone https://github.com/PaaS-TA/PAAS-TA-PINPOINT-MONITORING-BUILDPACK.git`  
+`git clone https://github.com/PaaS-TA/monitoring-pinpoint-buildpack.git`  
 
 
 #### 2. 빌드팩 패키지

@@ -37,6 +37,6 @@ module Package
 
   STAGING_DIR = "#{BUILD_DIR}/staging"
 
-  PACKAGE_NAME = "#{BUILD_DIR}/java-buildpack#{offline}-#{version}.zip"
+  PACKAGE_NAME = "#{BUILD_DIR}/java-buildpack-pinpoint-monitoring#{offline}-#{version}.zip"
 
 end

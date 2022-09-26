@@ -23,8 +23,8 @@
   </tr>
   <tr align=center>
     <td><a href="https://github.com/PaaS-TA/monitoring-pinpoint-release">Pinpoint</td>
-    <td><a href="https://github.com/PaaS-TA/monitoring-pinpoint-buildpack">Pinpoint Buildpack</td>
-    <td>🚩 <a href="https://github.com/PaaS-TA/monitoring-zabbix-release">Zabbix</a></td>
+    <td>🚩 <a href="https://github.com/PaaS-TA/monitoring-pinpoint-buildpack">Pinpoint Buildpack</td>
+    <td><a href="https://github.com/PaaS-TA/monitoring-zabbix-release">Zabbix</a></td>
     <td></td>
   </tr>
   </tr>

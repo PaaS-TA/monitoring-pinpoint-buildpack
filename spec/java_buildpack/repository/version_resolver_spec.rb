@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -67,6 +67,18 @@ describe JavaBuildpack::Repository::VersionResolver do
 
   it 'ignores illegal versions' do
     expect(described_class.resolve(tokenized_version('2.0.+'), versions)).to eq(tokenized_version('2.0.0'))
+  end
+
+  it 'picks an exact match over a partial match' do
+    versions = %w[3.1.1 3.1.1_BETA 3.1.1_BETA.2 3.1.2 3.2.0]
+    expect(described_class.resolve(tokenized_version('3.1.1'), versions)).to eq(tokenized_version('3.1.1'))
+    expect(described_class.resolve(tokenized_version('3.1.1_BETA'), versions)).to eq(tokenized_version('3.1.1_BETA'))
+  end
+
+  it 'picks the latest including qualifiers' do
+    versions = %w[3.1.1 3.1.1_BETA 3.1.1_BETA.2 3.1.2 3.2.0]
+    expect(described_class.resolve(tokenized_version('3.1.1_+'), versions)).to eq(tokenized_version('3.1.1_BETA.2'))
+    expect(described_class.resolve(tokenized_version('3.1.1_BE+'), versions)).to eq(tokenized_version('3.1.1_BETA.2'))
   end
 
   def tokenized_version(s)

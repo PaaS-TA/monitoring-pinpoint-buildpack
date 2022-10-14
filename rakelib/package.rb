@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,46 @@ require 'java_buildpack/buildpack_version'
 
 module Package
 
+  def packaging
+    @pkgcfg = configuration('packaging') if @pkgcfg.nil?
+    @pkgcfg
+  end
+
+  def configuration(id)
+    JavaBuildpack::Util::ConfigurationUtils.load(id, false, false)
+  end
+
+  def configurations(component_id, configuration, sub_component_id = nil)
+    configurations = []
+
+    if repository_configuration?(configuration)
+      configuration['component_id'] = component_id
+      configuration['sub_component_id'] = sub_component_id if sub_component_id
+
+      Utils::VersionUtils.java_version_lines(configuration, configurations) \
+          if Utils::VersionUtils.openjdk_jre? configuration
+
+      configurations << configuration
+    else
+      configuration.each { |k, v| configurations << configurations(component_id, v, k) if v.is_a? Hash }
+    end
+
+    configurations
+  end
+
+  def index_configuration(configuration)
+    [configuration['repository_root']]
+      .map { |r| { uri: r } }
+      .map { |r| augment_repository_root r }
+      .map { |r| augment_platform r }
+      .map { |r| augment_architecture r }
+      .map { |r| augment_path r }.flatten
+  end
+
+  def repository_configuration?(configuration)
+    configuration['version'] && configuration['repository_root']
+  end
+
   def self.offline
     '-offline' if BUILDPACK_VERSION.offline
   end
@@ -35,8 +75,8 @@ module Package
 
   PLATFORMS = %w[bionic].freeze
 
-  STAGING_DIR = "#{BUILD_DIR}/staging"
+  STAGING_DIR = "#{BUILD_DIR}/staging".freeze
 
-  PACKAGE_NAME = "#{BUILD_DIR}/java-buildpack-pinpoint-monitoring#{offline}-#{version}.zip"
+  PACKAGE_NAME = "#{BUILD_DIR}/java-buildpack-pinpoint-monitoring#{offline}-#{version}.zip".freeze
 
 end

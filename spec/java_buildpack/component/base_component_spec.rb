@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ describe JavaBuildpack::Component::BaseComponent do
   it 'prints timing information' do
     expect { |b| component.with_timing('test-caption', &b) }.to yield_control
 
-    expect(stdout.string).to match(/     test-caption \([\d]\.[\d]s\)/)
+    expect(stdout.string).to match(/     test-caption \(\d\.\ds\)/)
   end
 
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ module JavaBuildpack
 
       def manifest_class_path
         values = JavaBuildpack::Util::JavaMainUtils.manifest(@application)[CLASS_PATH_PROPERTY]
-        values.nil? ? [] : values.split(' ').map { |value| @droplet.root + value }
+        values.nil? ? [] : values.split.map { |value| @droplet.root + value }
       end
 
       def thin_root

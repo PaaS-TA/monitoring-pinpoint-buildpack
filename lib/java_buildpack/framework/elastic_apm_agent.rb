@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2018 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'shellwords'
 require 'java_buildpack/component/versioned_dependency_component'
 require 'java_buildpack/framework'
 
@@ -89,7 +90,12 @@ module JavaBuildpack
 
       def write_java_opts(java_opts, configuration)
         configuration.each do |key, value|
-          java_opts.add_system_property("elastic.apm.#{key}", value)
+          if /\$[({][^)}]+[)}]/ =~ value.to_s
+            # we need \" because this is a system property which ends up inside `JAVA_OPTS` which is already quoted
+            java_opts.add_system_property("elastic.apm.#{key}", "\\\"#{value}\\\"")
+          else
+            java_opts.add_system_property("elastic.apm.#{key}", Shellwords.escape(value))
+          end
         end
       end
 

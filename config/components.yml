@@ -1,5 +1,5 @@
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,10 +29,12 @@ containers:
 # Example: cf set-env JBP_CONFIG_COMPONENTS '{jres: ["JavaBuildpack::Jre::OpenJdkJRE"]}'
 # Please see the documentation for more detail.
 jres:
+# - "JavaBuildpack::Jre::GraalVmJRE"
 # - "JavaBuildpack::Jre::IbmJRE"
   - "JavaBuildpack::Jre::OpenJdkJRE"
 # - "JavaBuildpack::Jre::OracleJRE"
 # - "JavaBuildpack::Jre::ZuluJRE"
+# - "JavaBuildpack::Jre::ZingJRE"
 # - "JavaBuildpack::Jre::SapMachineJRE"
 
 # Frameworks are processed in order.
@@ -43,12 +45,13 @@ frameworks:
   - "JavaBuildpack::Framework::AppDynamicsAgent"
   - "JavaBuildpack::Framework::AspectjWeaverAgent"
   - "JavaBuildpack::Framework::AzureApplicationInsightsAgent"
+  - "JavaBuildpack::Framework::CheckmarxIastAgent"
   - "JavaBuildpack::Framework::ClientCertificateMapper"
   - "JavaBuildpack::Framework::ContainerCustomizer"
   - "JavaBuildpack::Framework::ContainerSecurityProvider"
   - "JavaBuildpack::Framework::ContrastSecurityAgent"
+  - "JavaBuildpack::Framework::DatadogJavaagent"
   - "JavaBuildpack::Framework::Debug"
-  - "JavaBuildpack::Framework::DynatraceAppmonAgent"
   - "JavaBuildpack::Framework::DynatraceOneAgent"
   - "JavaBuildpack::Framework::ElasticApmAgent"
   - "JavaBuildpack::Framework::GoogleStackdriverDebugger"
@@ -64,13 +67,13 @@ frameworks:
   - "JavaBuildpack::Framework::MetricWriter"
   - "JavaBuildpack::Framework::NewRelicAgent"
   - "JavaBuildpack::Framework::PostgresqlJDBC"
-  - "JavaBuildpack::Framework::ProtectAppSecurityProvider"
   - "JavaBuildpack::Framework::RiverbedAppinternalsAgent"
+  - "JavaBuildpack::Framework::SealightsAgent"
+  - "JavaBuildpack::Framework::SeekerSecurityProvider"
   - "JavaBuildpack::Framework::SpringAutoReconfiguration"
   - "JavaBuildpack::Framework::SpringInsight"
   - "JavaBuildpack::Framework::SkyWalkingAgent"
   - "JavaBuildpack::Framework::YourKitProfiler"
-  - "JavaBuildpack::Framework::TakipiAgent"
   - "JavaBuildpack::Framework::JavaSecurity"
   - "JavaBuildpack::Framework::JavaOpts"
   - "JavaBuildpack::Framework::PinpointAgent"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ describe JavaBuildpack::Component::AdditionalLibraries do
     end
 
     it 'renders as classpath' do
-      additional_libraries << droplet.sandbox + 'jar-2.jar'
-      additional_libraries << droplet.sandbox + 'jar-1.jar'
+      additional_libraries << (droplet.sandbox + 'jar-2.jar')
+      additional_libraries << (droplet.sandbox + 'jar-1.jar')
 
       expect(additional_libraries.as_classpath).to eq('-cp $PWD/.java-buildpack/additional_libraries/jar-1.jar:' \
                                                       '$PWD/.java-buildpack/additional_libraries/jar-2.jar')

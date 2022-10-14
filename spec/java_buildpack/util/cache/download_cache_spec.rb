@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -225,6 +225,22 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
 
   context do
 
+    let(:environment) { { 'HTTP_PROXY' => 'http://user%21:pass%40@proxy:9000', 'http_proxy' => nil } }
+
+    it 'decodes user/pass from HTTP_PROXY if encoded' do
+      stub_request(:get, uri)
+        .to_return(status: 200, body: 'foo-cached', headers: { Etag: 'foo-etag',
+                                                               'Last-Modified' => 'foo-last-modified' })
+
+      allow(Net::HTTP).to receive(:Proxy).with('proxy', 9000, /user!/, /pass@/).and_call_original
+
+      download_cache.get(uri) {}
+    end
+
+  end
+
+  context do
+
     let(:environment) { { 'https_proxy' => 'http://proxy:9000', 'HTTPS_PROXY' => nil } }
 
     it 'uses https_proxy if specified and URL is secure' do
@@ -251,6 +267,22 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
 
       allow(Net::HTTP).to receive(:Proxy).and_call_original
       allow(Net::HTTP).to receive(:Proxy).with('proxy', 9000, nil, nil).and_call_original
+
+      download_cache.get(uri_secure) {}
+    end
+
+  end
+
+  context do
+
+    let(:environment) { { 'HTTPS_PROXY' => 'http://user%21:pass%40@proxy:9000', 'https_proxy' => nil } }
+
+    it 'decodes user/pass from HTTPS_PROXY if encoded' do
+      stub_request(:get, uri_secure)
+        .to_return(status: 200, body: 'foo-cached', headers: { Etag: 'foo-etag',
+                                                               'Last-Modified' => 'foo-last-modified' })
+
+      allow(Net::HTTP).to receive(:Proxy).with('proxy', 9000, /user!/, /pass@/).and_call_original
 
       download_cache.get(uri_secure) {}
     end
@@ -294,7 +326,18 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
       .to_return(status: 200, body: 'foo-cached', headers: { Etag: 'foo-etag', 'Last-Modified' => 'foo-last-modified' })
 
     allow(Net::HTTP).to receive(:Proxy).and_call_original
-    allow(Net::HTTP).to receive(:start).with('foo-uri', 80, {}).and_call_original
+
+    # behavior changed between ruby 2 & 3 with how default hash kwargs are passed
+    # this causes different arguments for the mock based on the ruby version
+    # Remove this when we drop support for ruby 2
+    case RUBY_VERSION
+    when /2\.\d+\.\d+/
+      allow(Net::HTTP).to receive(:start).with('foo-uri', 80, {}).and_call_original
+    when /3\.\d+\.\d+/
+      allow(Net::HTTP).to receive(:start).with('foo-uri', 80).and_call_original
+    else
+      raise 'unexpected ruby version'
+    end
 
     download_cache.get(uri) {}
   end
@@ -305,7 +348,18 @@ describe JavaBuildpack::Util::Cache::DownloadCache do
 
     allow(ca_certs_directory).to receive(:exist?).and_return(true)
     allow(Net::HTTP).to receive(:Proxy).and_call_original
-    allow(Net::HTTP).to receive(:start).with('foo-uri', 80, {}).and_call_original
+
+    # behavior changed between ruby 2 & 3 with how default hash kwargs are passed
+    # this causes different arguments for the mock based on the ruby version
+    # Remove this when we drop support for ruby 2
+    case RUBY_VERSION
+    when /2\.\d+\.\d+/
+      allow(Net::HTTP).to receive(:start).with('foo-uri', 80, {}).and_call_original
+    when /3\.\d+\.\d+/
+      allow(Net::HTTP).to receive(:start).with('foo-uri', 80).and_call_original
+    else
+      raise 'unexpected ruby version'
+    end
 
     download_cache.get(uri) {}
   end

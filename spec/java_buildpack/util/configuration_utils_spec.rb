@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ describe JavaBuildpack::Util::ConfigurationUtils do
   end
 
   it 'not load absent configuration file' do
-    pathname = instance_double(Pathname)
+    pathname = instance_double('Pathname')
     allow(Pathname).to receive(:new).and_return(pathname)
     allow(pathname).to receive(:exist?).and_return(false)
 
@@ -53,7 +53,7 @@ describe JavaBuildpack::Util::ConfigurationUtils do
   context do
 
     before do
-      pathname = instance_double(Pathname)
+      pathname = instance_double('Pathname')
       allow(Pathname).to receive(:new).and_return(pathname)
       allow(pathname).to receive(:exist?).and_return(true)
 
@@ -102,6 +102,66 @@ describe JavaBuildpack::Util::ConfigurationUtils do
     context do
 
       let(:environment) do
+        { 'JBP_DEFAULT_TEST' => '{bar: {alpha: {one: 3, two: {one: 3}}, bravo: newValue}, foo: lion}' }
+      end
+
+      it 'overlays operator default matching environment variables' do
+
+        expect(described_class.load('test')).to eq('foo' => { 'one' => '1', 'two' => 2 },
+                                                   'bar' => { 'alpha' => { 'one' => 3, 'two' => 'dog' } },
+                                                   'version' => '1.7.1')
+      end
+
+    end
+
+    context do
+
+      let(:environment) do
+        { 'JBP_DEFAULT_TEST' => '{version: 1.8.+}' }
+      end
+
+      it 'overlays operator default config' do
+        expect(described_class.load('test')).to eq('foo' => { 'one' => '1', 'two' => 2 },
+                                                   'bar' => { 'alpha' => { 'one' => 'cat', 'two' => 'dog' } },
+                                                   'version' => '1.8.+')
+      end
+
+    end
+
+    context do
+
+      let(:environment) do
+        { 'JBP_DEFAULT_TEST' => '{version: 11.+}',
+          'JBP_CONFIG_TEST' => '{version: 17.+}' }
+      end
+
+      it 'overlays operator default config and environment variable config' do
+        expect(described_class.load('test')).to eq('foo' => { 'one' => '1', 'two' => 2 },
+                                                   'bar' => { 'alpha' => { 'one' => 'cat', 'two' => 'dog' } },
+                                                   'version' => '17.+')
+      end
+
+    end
+
+    context do
+
+      let(:environment) do
+        { 'JBP_DEFAULT_TEST' => '{bar: {alpha: {one: 3, two: {one: 3}}, bravo: newValue}}',
+          'JBP_CONFIG_TEST' => '{bar: {alpha: {one: 9, two: {one: 3}}, bravo: newValue}}' }
+      end
+
+      it 'overlays operator default matching and environment variables' do
+
+        expect(described_class.load('test')).to eq('foo' => { 'one' => '1', 'two' => 2 },
+                                                   'bar' => { 'alpha' => { 'one' => 9, 'two' => 'dog' } },
+                                                   'version' => '1.7.1')
+      end
+
+    end
+
+    context do
+
+      let(:environment) do
         { 'JBP_CONFIG_TEST' => 'Not an array or a hash' }
       end
 
@@ -115,7 +175,7 @@ describe JavaBuildpack::Util::ConfigurationUtils do
     context do
 
       let(:environment) do
-        { 'JBP_CONFIG_TEST' => '{version:1.8.+}' }
+        { 'JBP_CONFIG_TEST' => '{version: 1.8.+' }
       end
 
       it 'diagnoses invalid YAML syntax' do

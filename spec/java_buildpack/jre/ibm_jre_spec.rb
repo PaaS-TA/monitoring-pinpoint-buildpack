@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2017 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -59,9 +59,11 @@ class StubIbmJRE < JavaBuildpack::Jre::IbmJRE
 
   public :command, :sub_components
 
+  # rubocop:disable Lint/UselessMethodDefinition
   def supports?
     super
   end
+  # rubocop:enable Lint/UselessMethodDefinition
 
 end
 

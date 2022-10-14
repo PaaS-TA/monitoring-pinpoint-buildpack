@@ -2,12 +2,10 @@
 require: rubocop-rspec
 
 AllCops:
-  # Include:
-  # - '**/Rakefile'
-  # - 'rakelib/**/*'
+  NewCops: enable
+  SuggestExtensions: false
   Exclude:
   - 'build/**/*'
-  # - Gemfile
 Layout/EmptyLinesAroundBlockBody:
   Exclude:
   - 'spec/**/*.rb'
@@ -15,10 +13,12 @@ Layout/EmptyLinesAroundClassBody:
   Enabled: false
 Layout/EmptyLinesAroundModuleBody:
   Enabled: false
+Layout/LineLength:
+  Max: 120
 Layout/MultilineOperationIndentation:
   Enabled: false
 Metrics/AbcSize:
- Max: 22
+  Max: 25
 Metrics/BlockLength:
   Exclude:
   - 'spec/**/*.rb'
@@ -26,16 +26,14 @@ Metrics/ClassLength:
   Max: 250
 Metrics/CyclomaticComplexity:
   Max: 10
-Metrics/LineLength:
-  Max: 120
 Metrics/MethodLength:
   Max: 25
+Naming/MethodParameterName:
+  Enabled: false
 Metrics/ParameterLists:
   Max: 10
 Metrics/PerceivedComplexity:
   Max: 10
-Naming/UncommunicativeMethodParamName:
-  Enabled: false
 RSpec/AnyInstance:
   Enabled: false
 RSpec/ExampleLength:
@@ -56,5 +54,20 @@ Style/Documentation:
   Enabled: false
 Style/FormatStringToken:
   Enabled: false
-Style/MethodMissingSuper:
+Lint/MissingSuper:
   Enabled: false
+Style/StringConcatenation:
+  Enabled: false
+Lint/EmptyBlock:
+  Exclude:
+    - 'spec/**/*.rb'
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+RSpec/VerifiedDoubleReference:
+  EnforcedStyle: string
+Style/OptionalBooleanParameter:
+  Enabled: false
+Lint/RedundantCopDisableDirective:
+  Enabled: false # disabled as this can be tough to manage across multiple ruby versions
+Style/RedundantFreeze:
+  Enabled: false # enable when we only support ruby 3.0+

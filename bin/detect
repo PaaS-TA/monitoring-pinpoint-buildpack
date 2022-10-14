@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ require 'java_buildpack/buildpack'
 
 app_dir = ARGV[0]
 
-components = JavaBuildpack::Buildpack.with_buildpack(app_dir, 'Detect failed with exception %s', &:detect).compact
+components = JavaBuildpack::Buildpack.with_buildpack(app_dir, nil, nil, 'Detect failed with exception %s',
+                                                     &:detect).compact
 
 if components.empty?
   abort

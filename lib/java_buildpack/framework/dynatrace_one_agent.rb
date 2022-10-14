@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,11 @@ module JavaBuildpack
       #
       # @param [Hash] context a collection of utilities used the component
       def initialize(context)
-        super(context)
+        @application    = context[:application]
+        @component_name = self.class.to_s.space_case
+        @configuration  = context[:configuration]
+        @droplet        = context[:droplet]
+
         @version, @uri = agent_download_url if supports?
         @logger        = JavaBuildpack::Logging::LoggerFactory.instance.get_logger DynatraceOneAgent
       end
@@ -108,7 +112,11 @@ module JavaBuildpack
 
       def agent_download_url
         download_uri = "#{api_base_url(credentials)}/v1/deployment/installer/agent/unix/paas/latest?include=java" \
-                       "&bitness=64&Api-Token=#{credentials[APITOKEN]}"
+                       '&bitness=64' \
+                       "&Api-Token=#{credentials[APITOKEN]}"
+
+        download_uri += "&networkZone=#{networkzone}" if networkzone?
+
         ['latest', download_uri]
       end
 
@@ -170,6 +178,10 @@ module JavaBuildpack
         end
       end
 
+      def networkzone
+        credentials[NETWORKZONE]
+      end
+
       def networkzone?
         credentials.key?(NETWORKZONE)
       end
@@ -191,8 +203,6 @@ module JavaBuildpack
         FileUtils.mv(root + 'agent', @droplet.sandbox)
         FileUtils.mv(root + 'manifest.json', @droplet.sandbox)
       end
-
     end
-
   end
 end

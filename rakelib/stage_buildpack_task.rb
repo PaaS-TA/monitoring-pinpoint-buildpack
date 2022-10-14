@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ module Package
     def disable_remote_downloads_task
       file "#{STAGING_DIR}/config/cache.yml" do |t|
         content = File.open(t.source, 'r') { |f| f.read.gsub(/enabled/, 'disabled') }
-        File.open(t.name, 'w') { |f| f.write content }
+        File.open(t.name, 'w') { |f| File.write(f, content) }
       end
     end
 
@@ -67,7 +67,7 @@ module Package
       directory parent
       file target => [parent] do |t|
         File.open(t.name, 'w') do |f|
-          f.write(BUILDPACK_VERSION.to_hash.to_yaml)
+          File.write(f, BUILDPACK_VERSION.to_hash.to_yaml)
         end
       end
 

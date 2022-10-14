@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,11 +42,9 @@ module JavaBuildpack
           tokenized_candidate_version = safe_candidate_version candidate_version
           tokenized_versions          = versions.map { |version| create_token(version) }.compact
 
-          version = tokenized_versions
-                    .select { |tokenized_version| matches? tokenized_candidate_version, tokenized_version }
-                    .max { |a, b| a <=> b }
-
-          version
+          tokenized_versions
+            .select { |tokenized_version| matches? tokenized_candidate_version, tokenized_version }
+            .max { |a, b| a <=> b }
         end
 
         private
@@ -76,18 +74,25 @@ module JavaBuildpack
         end
 
         def matches?(tokenized_candidate_version, tokenized_version)
+          wildcard_matched = false
           (0..3).all? do |i|
-            tokenized_candidate_version[i].nil? || as_regex(tokenized_candidate_version[i]) =~ tokenized_version[i]
+            next true if wildcard_matched || (tokenized_candidate_version[i].nil? && tokenized_version[i].nil?)
+
+            next false if tokenized_candidate_version[i].nil? && !tokenized_version[i].nil?
+
+            if tokenized_candidate_version[i] == JavaBuildpack::Util::TokenizedVersion::WILDCARD
+              wildcard_matched = true
+              next true
+            end
+
+            if tokenized_candidate_version[i].end_with?(JavaBuildpack::Util::TokenizedVersion::WILDCARD)
+              next !tokenized_version[i].nil? && tokenized_version[i].start_with?(tokenized_candidate_version[i][0..-2])
+            end
+
+            tokenized_candidate_version[i] == tokenized_version[i]
           end
         end
-
-        def as_regex(version)
-          /^#{version.gsub(JavaBuildpack::Util::TokenizedVersion::WILDCARD, '.*')}/
-        end
-
       end
-
     end
-
   end
 end

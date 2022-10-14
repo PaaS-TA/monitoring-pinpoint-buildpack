@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -47,7 +47,8 @@ module JavaBuildpack
           @droplet.environment_variables.as_env_vars,
           @droplet.java_home.as_env_var,
           'exec',
-          qualify_path(start_script(root), @droplet.root)
+          qualify_path(start_script(root), @droplet.root),
+          arguments
         ].flatten.compact.join(' ')
       end
 
@@ -76,11 +77,17 @@ module JavaBuildpack
 
       private
 
-      PATTERN_APP_CLASSPATH = /^declare -r app_classpath=\"(.*)\"$/.freeze
+      ARGUMENTS_PROPERTY = 'arguments'
+
+      PATTERN_APP_CLASSPATH = /^declare -r app_classpath="(.*)"$/.freeze
 
       PATTERN_CLASSPATH = /^CLASSPATH=(.*)$/.freeze
 
-      private_constant :PATTERN_APP_CLASSPATH, :PATTERN_CLASSPATH
+      private_constant :ARGUMENTS_PROPERTY, :PATTERN_APP_CLASSPATH, :PATTERN_CLASSPATH
+
+      def arguments
+        @configuration[ARGUMENTS_PROPERTY]
+      end
 
       def augment_app_classpath(content)
         additional_classpath = (@droplet.additional_libraries + @droplet.root_libraries).sort.map do |library|

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ shared_context 'with logging help' do
   include_context 'with console help'
   include_context 'with application help'
 
-  previous_log_config    = ENV['JBP_CONFIG_LOGGING']
-  previous_log_level     = ENV['JBP_LOG_LEVEL']
+  previous_log_config    = ENV.fetch('JBP_CONFIG_LOGGING', nil)
+  previous_log_level     = ENV.fetch('JBP_LOG_LEVEL', nil)
   previous_debug_level   = $DEBUG
   previous_verbose_level = $VERBOSE
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -107,8 +107,10 @@ describe JavaBuildpack::Util::SpringBootUtils do
 
     utils.cache_thin_dependencies java_home.root, 'test-application-root', 'test-thin-root'
 
+    # rubocop:disable Layout/LineLength
     expect(utils).to have_received(:shell).with("#{java_home.root + 'bin/java'} -Dthin.dryrun " \
-      '-Dthin.root=test-thin-root -cp test-application-root org.springframework.boot.loader.wrapper.ThinJarWrapper')
+                                                '-Dthin.root=test-thin-root -cp test-application-root org.springframework.boot.loader.wrapper.ThinJarWrapper')
+    # rubocop:enable Layout/LineLength
   end
 
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,28 +38,28 @@ module JavaBuildpack
       # Whether or not the version of Java is 8 or later
       # @return [Boolean] +true+ if and only if the version is 1.8.0 or later
       def java_8_or_later?
-        @version >= VERSION_8
+        @version >= VERSION8
       end
 
       # Whether or not the version of Java is 9 or later
       # @return [Boolean] +true+ if and only if the version is 9.0.0 or later
       def java_9_or_later?
-        @version >= VERSION_9
+        @version >= VERSION9
       end
 
       # Whether or not the version of Java is 10 or later
       # @return [Boolean] +true+ if and only if the version is 10.0.0 or later
       def java_10_or_later?
-        @version >= VERSION_10
+        @version >= VERSION10
       end
 
-      VERSION_8 = JavaBuildpack::Util::TokenizedVersion.new('1.8.0').freeze
+      VERSION8 = JavaBuildpack::Util::TokenizedVersion.new('1.8.0').freeze
 
-      VERSION_9 = JavaBuildpack::Util::TokenizedVersion.new('9.0.0').freeze
+      VERSION9 = JavaBuildpack::Util::TokenizedVersion.new('9.0.0').freeze
 
-      VERSION_10 = JavaBuildpack::Util::TokenizedVersion.new('10.0.0').freeze
+      VERSION10 = JavaBuildpack::Util::TokenizedVersion.new('10.0.0').freeze
 
-      private_constant :VERSION_8, :VERSION_9, :VERSION_10
+      private_constant :VERSION8, :VERSION9, :VERSION10
 
     end
 

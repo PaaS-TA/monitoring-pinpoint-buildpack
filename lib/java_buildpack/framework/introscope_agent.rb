@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ module JavaBuildpack
           .add_system_property('introscope.agent.hostName', agent_host_name)
           .add_system_property('com.wily.introscope.agent.agentName', agent_name(credentials))
           .add_system_property('introscope.agent.defaultProcessName', default_process_name(credentials))
+          .add_system_property('com.wily.introscope.agent.startup.mode', 'neo')
 
         export_all_properties(credentials, java_opts)
       end
@@ -125,7 +126,7 @@ module JavaBuildpack
       end
 
       def export_all_properties(credentials, java_opts)
-        credentials.keys.each do |key|
+        credentials.each_key do |key|
           correct_key = key.tr('_', '.')
           if %w[agentManager.url.1 agent.manager.url].include?(correct_key)
             add_url(credentials, java_opts)

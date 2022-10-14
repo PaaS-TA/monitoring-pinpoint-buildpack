@@ -25,6 +25,8 @@ The container can be configured by modifying the [`config/tomcat.yml`][] file in
 | `access_logging_support.repository_root` | The URL of the Tomcat Access Logging Support repository index ([details][repositories]).
 | `access_logging_support.version` | The version of Tomcat Access Logging Support to use. Candidate versions can be found in [this listing](http://download.pivotal.io.s3.amazonaws.com/tomcat-access-logging-support/index.yml).
 | `access_logging_support.access_logging` | Set to `enabled` to turn on the access logging support. Default is `disabled`.
+| `geode_store.repository_root` | The URL of the Geode Store repository index ([details][repositories]).
+| `geode_store.version` | The version of Geode Store to use. Candidate versions can be found in [this listing](https://java-buildpack-tomcat-gemfire-store.s3-us-west-2.amazonaws.com/index.yml).
 | `lifecycle_support.repository_root` | The URL of the Tomcat Lifecycle Support repository index ([details][repositories]).
 | `lifecycle_support.version` | The version of Tomcat Lifecycle Support to use. Candidate versions can be found in [this listing](http://download.pivotal.io.s3.amazonaws.com/tomcat-lifecycle-support/index.yml).
 | `logging_support.repository_root` | The URL of the Tomcat Logging Support repository index ([details][repositories]).
@@ -92,8 +94,8 @@ By default, the Tomcat instance is configured to store all Sessions and their da
 ### Redis
 To enable Redis-based session replication, simply bind a Redis service containing a name, label, or tag that has `session-replication` as a substring.
 
-### Pivotal Cloud Cache
-To enable session state caching on 'Pivotal Cloud Cache', bind to a 'Pivotal Cloud Cache' service instance who's name either ends in `-session-replication` or is tagged with `session-replication`.
+### Tanzu GemFire for VMs
+To enable session state caching on Tanzu GemFire for VMs, bind to a Tanzu GemFire service instance whose name either ends in `-session-replication` or is tagged with `session-replication`.
 
 Service instances can be created with a tag:
 

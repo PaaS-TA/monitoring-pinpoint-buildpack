@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
 
       allow(application_cache).to receive(:get)
         .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64&' \
-        'Api-Token=test-apitoken')
+              'Api-Token=test-apitoken')
         .and_yield(Pathname.new('spec/fixtures/stub-dynatrace-one-agent.zip').open, false)
     end
 
@@ -60,7 +60,7 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
       component.release
 
       expect(java_opts).to include('-agentpath:$PWD/.java-buildpack/dynatrace_one_agent/agent/lib64/' \
-        'liboneagentloader.so')
+                                   'liboneagentloader.so')
       expect(java_opts).to include('-Xshare:off')
     end
 
@@ -73,7 +73,7 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
       expect(environment_variables).to include('DT_TENANT=test-environmentid')
       expect(environment_variables).to include('DT_TENANTTOKEN=token-from-file')
       expect(environment_variables).to include('DT_CONNECTION_POINT=' \
-        '"https://endpoint1/communication;https://endpoint2/communication"')
+                                               '"https://endpoint1/communication;https://endpoint2/communication"')
     end
 
     context do
@@ -98,10 +98,35 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
         allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').and_return(true)
         allow(services).to receive(:find_service).and_return('credentials' => { 'environmentid' => 'test-environmentid',
                                                                                 'apiurl' => 'test-apiurl',
+                                                                                'apitoken' => 'test-apitoken',
+                                                                                'networkzone' => 'test-network-zone' })
+
+        allow(application_cache).to receive(:get)
+          .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64&' \
+                'Api-Token=test-apitoken&networkZone=test-network-zone')
+          .and_yield(Pathname.new('spec/fixtures/stub-dynatrace-one-agent.zip').open, false)
+      end
+
+      it 'downloads Dynatrace agent zip with networkzone',
+         cache_fixture: 'stub-dynatrace-one-agent.zip' do
+
+        component.compile
+
+        expect(sandbox + 'agent/lib64/liboneagentloader.so').to exist
+        expect(sandbox + 'manifest.json').to exist
+      end
+    end
+
+    context do
+
+      before do
+        allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').and_return(true)
+        allow(services).to receive(:find_service).and_return('credentials' => { 'environmentid' => 'test-environmentid',
+                                                                                'apiurl' => 'test-apiurl',
                                                                                 'apitoken' => 'test-apitoken' })
         allow(application_cache).to receive(:get)
           .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64' \
-            '&Api-Token=test-apitoken')
+                '&Api-Token=test-apitoken')
           .and_raise(RuntimeError.new('service interrupt'))
       end
 
@@ -121,7 +146,7 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
                                                                                 'skiperrors' => 'true' })
         allow(application_cache).to receive(:get)
           .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64' \
-            '&Api-Token=test-apitoken')
+                '&Api-Token=test-apitoken')
           .and_raise(RuntimeError.new('service interrupt'))
       end
 
@@ -135,7 +160,7 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
         component.release
 
         expect(java_opts).not_to include('-agentpath:$PWD/.java-buildpack/dynatrace_one_agent/agent/lib64/' \
-          'liboneagentloader.so')
+                                         'liboneagentloader.so')
       end
 
     end

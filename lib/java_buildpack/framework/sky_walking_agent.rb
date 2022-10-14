@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ module JavaBuildpack
       def release
         credentials = @application.services.find_service(FILTER, 'servers')['credentials']
         java_opts = @droplet.java_opts
-        java_opts.add_javaagent(@droplet.sandbox + 'agent/skywalking-agent.jar')
+        java_opts.add_javaagent(@droplet.sandbox + 'skywalking-agent.jar')
 
         application_name java_opts, credentials
         sample_n_per_3_secs java_opts, credentials
@@ -55,7 +55,7 @@ module JavaBuildpack
 
       private
 
-      FILTER = /sky[-]?walking/.freeze
+      FILTER = /sky-?walking/.freeze
 
       private_constant :FILTER
 

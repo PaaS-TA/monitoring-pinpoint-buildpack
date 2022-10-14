@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,9 +39,11 @@ describe JavaBuildpack::Buildpack do
 
   let(:stub_jre2) { instance_double('StubJre2', detect: nil, compile: nil, release: nil, component_name: 'StubJre2') }
 
+  let(:deps_dir) { Pathname.new Dir.mktmpdir }
+
   let(:buildpack) do
     buildpack = nil
-    described_class.with_buildpack(app_dir, 'Error %s') { |b| buildpack = b }
+    described_class.with_buildpack(app_dir, deps_dir, '0', 'Error %s') { |b| buildpack = b }
     buildpack
   end
 
@@ -62,6 +64,14 @@ describe JavaBuildpack::Buildpack do
 
     allow(Test::StubJre1).to receive(:new).and_return(stub_jre1)
     allow(Test::StubJre2).to receive(:new).and_return(stub_jre2)
+  end
+
+  after do |example|
+    if example.metadata[:no_cleanup]
+      puts "Deps Directory: #{deps_dir}"
+    else
+      FileUtils.rm_rf deps_dir
+    end
   end
 
   it 'raises an error if more than one container can run an application' do
@@ -88,12 +98,11 @@ describe JavaBuildpack::Buildpack do
 
     before do
       allow(JavaBuildpack::Util::ConfigurationUtils)
-        .to receive(:load).with('components')
-                          .and_return(
-                            'containers' => [],
-                            'frameworks' => ['JavaBuildpack::Framework::JavaOpts'],
-                            'jres' => []
-                          )
+        .to receive(:load).with('components').and_return(
+          'containers' => [],
+          'frameworks' => ['JavaBuildpack::Framework::JavaOpts'],
+          'jres' => []
+        )
     end
 
     it 'requires files needed for components' do
@@ -152,7 +161,9 @@ describe JavaBuildpack::Buildpack do
   end
 
   def with_buildpack(&_)
-    described_class.with_buildpack(app_dir, 'Error %s') { |buildpack| yield buildpack }
+    # rubocop:disable Style/ExplicitBlockArgument
+    described_class.with_buildpack(app_dir, nil, nil, 'Error %s') { |buildpack| yield buildpack }
+    # rubocop:enable Style/ExplicitBlockArgument
   end
 
 end

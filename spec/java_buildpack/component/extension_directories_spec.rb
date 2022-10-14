@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,8 +35,8 @@ describe JavaBuildpack::Component::ExtensionDirectories do
     end
 
     it 'renders as path' do
-      extension_directories << droplet.sandbox + 'extension-directories-1'
-      extension_directories << droplet.sandbox + 'extension-directories-2'
+      extension_directories << (droplet.sandbox + 'extension-directories-1')
+      extension_directories << (droplet.sandbox + 'extension-directories-2')
 
       expect(extension_directories.as_paths).to eq('$PWD/.java-buildpack/extension_directories/' \
                                                    'extension-directories-1:$PWD/.java-buildpack/' \

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ describe JavaBuildpack::Framework::JavaOpts do
   context do
     let(:configuration) do
       { 'java_opts' => '-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=y ' \
-          "-XX:OnOutOfMemoryError='kill -9 %p'" }
+                       "-XX:OnOutOfMemoryError='kill -9 %p'" }
     end
 
     it 'adds split java_opts to context' do
@@ -81,7 +81,7 @@ describe JavaBuildpack::Framework::JavaOpts do
       { 'java_opts' => '-Dtest=something.\\\$dollar.\\\\\\\slash' }
     end
 
-    it 'can escape non-escaped characters ' do
+    it 'can escape non-escaped characters' do
       component.release
       expect(java_opts).to include('-Dtest=something.\\$dollar.\\\slash')
     end

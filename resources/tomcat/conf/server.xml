@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!--
-  ~ Copyright 2013-2019 the original author or authors.
+  ~ Cloud Foundry Java Buildpack
+  ~ Copyright 2013-2020 the original author or authors.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -18,7 +19,9 @@
 <Server port='-1'>
 
     <Service name='Catalina'>
-        <Connector port='${http.port}' bindOnInit='false' connectionTimeout='20000'/>
+        <Connector port='${http.port}' bindOnInit='false' connectionTimeout='20000'>
+            <UpgradeProtocol className='org.apache.coyote.http2.Http2Protocol' />
+        </Connector>
 
         <Engine defaultHost='localhost' name='Catalina'>
             <Valve className='org.apache.catalina.valves.RemoteIpValve' protocolHeader='x-forwarded-proto'/>

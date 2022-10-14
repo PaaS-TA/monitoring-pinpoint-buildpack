@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Cloud Foundry Java Buildpack
-# Copyright 2013-2019 the original author or authors.
+# Copyright 2013-2020 the original author or authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ module JavaBuildpack
             "$app_home/#{additional_library.relative_path_from(start_script.dirname)}"
           end
 
-          update_file start_script, /^declare -r app_classpath=\"(.*)\"$/,
+          update_file start_script, /^declare -r app_classpath="(.*)"$/,
                       "declare -r app_classpath=\"#{additional_classpath.join(':')}:\\1\""
         end
 
